@@ -28,4 +28,22 @@ const createTableIfNotExists = async () => {
     }
 };
 
-module.exports = { requestHandler, createTableIfNotExists }
+const createData = async (userData) => {
+    const sql = postgres(process.env.DATABASE_URL);
+    let result;
+    try {
+        result = await sql`
+        INSERT INTO public.users (name, age, address, additional_info)
+        VALUES (${userData.name}, ${userData.age}, ${userData.address}, ${userData.additional_info})
+        RETURNING id, name, age, address, additional_info;`;
+
+        console.log('User inserted:', result);
+    } catch (error) {
+        console.error('Error creating table:', error.message);
+    } finally {
+        await sql.end(); // Close the database connection
+    }
+    return result;
+}
+
+module.exports = { requestHandler, createTableIfNotExists, createData }
