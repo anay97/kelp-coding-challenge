@@ -1,34 +1,46 @@
 const { convertCSVToJSON } = require('../services/fileService');
-const { requestHandler, createTableIfNotExists, createData } = require('../services/db');
-
+const { createUser, fetchAllUsers, fetchUsersInRange, fetchUserCount } = require('../services/db');
+const { convertJSONToUserDataObject } = require('../model/user');
 const processCSVRoute = async (req, res) => {
     try {
         const jsonData = await convertCSVToJSON();
-        console.log(typeof jsonData);
-
         const userData = convertJSONToUserDataObject(jsonData[0]);
-        res.status(200).json({ success: true, data: userData });
+        const result = await createUser(userData);
+        res.status(200).json({ success: true, data: result });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ success: false, message: 'Error processing file' + error });
+        res.status(500).json({ success: false, message: 'Error processing file' });
     }
 }
 
-const requestHandlerRoute = async (req, res) => {
-    const version = await createTableIfNotExists();
-    res.json(version);
+const reportPageRoute = async (req, res) => {
+    res.render('report');
 }
 
-const convertJSONToUserDataObject = (jsonData) => {
-    const userData = {}
-    userData['name'] = jsonData['name']['firstName'] + ' ' + jsonData['name']['lastName'];
-    userData['age'] = jsonData['age'];
-    userData['address'] = jsonData['address'];
-    delete jsonData['name'];
-    delete jsonData['age'];
-    delete jsonData['address'];
-    userData['additional_info'] = jsonData;
-    return userData;
+const reportRoute = async (req, res) => {
+    const ageRange = {}
+    if (req.body.lessThan) {
+        ageRange['lessThan'] = req.body.lessThan;
+    }
+    if (req.body.greaterThan) {
+        ageRange['greaterThan'] = req.body.greaterThan;
+    }
+    if (req.body.equalTo) {
+        ageRange['equalTo'] = req.body.equalTo;
+    }
+    let isEfficient;
+    if (req.body.efficient) {
+        isEfficient = true;
+    } else {
+        isEfficient = false;
+    }
+    try {
+        const users = await fetchUsersInRange(ageRange, isEfficient);
+        const totalCount = await fetchUserCount();
+        res.status(200).json({ success: true, data: users, totalCount });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Error generating report' });
+    }
 }
-
-module.exports = { processCSVRoute, requestHandlerRoute }
+module.exports = { processCSVRoute, reportRoute, reportPageRoute }
