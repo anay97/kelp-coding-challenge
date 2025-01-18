@@ -90,7 +90,7 @@ You can fetch users by providing age range criteria such as `lessThan`, `greater
 
 If the equal to field is selected, the other two fields are ignored by the code.
 
-#### Fetch vs Efficient Fetch
+### Fetch vs Efficient Fetch
 You can fetch users by providing age range criteria such as `lessThan`, `greaterThan`, or `equalTo`.
 
 If you use the `Fetch` button, the database is queried and all the fields are returned along with showing the name and age in a tabular format. On the other hand, while using the `Efficient Fetch` button, only the count of the users for the given age range are returned. This is far more efficient and is useful when querying tables with large number of rows.

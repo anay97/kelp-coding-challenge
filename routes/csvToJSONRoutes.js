@@ -1,12 +1,16 @@
 const { convertCSVToJSON } = require('../services/fileService');
 const { createUser, fetchAllUsers, fetchUsersInRange, fetchUserCount } = require('../services/db');
 const { convertJSONToUserDataObject } = require('../model/user');
+
 const processCSVRoute = async (req, res) => {
     try {
         const jsonData = await convertCSVToJSON();
-        const userData = convertJSONToUserDataObject(jsonData[0]);
-        const result = await createUser(userData);
-        res.status(200).json({ success: true, data: result });
+        const userData = []
+        jsonData.forEach(user => {
+            userData.push(convertJSONToUserDataObject(user));
+        });
+        await createUser(userData);
+        res.status(200).json({ success: true });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Error processing file' });
@@ -28,11 +32,9 @@ const reportRoute = async (req, res) => {
     if (req.body.equalTo) {
         ageRange['equalTo'] = req.body.equalTo;
     }
-    let isEfficient;
+    let isEfficient = false;
     if (req.body.efficient) {
         isEfficient = true;
-    } else {
-        isEfficient = false;
     }
     try {
         const users = await fetchUsersInRange(ageRange, isEfficient);

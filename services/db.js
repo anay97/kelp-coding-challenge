@@ -28,16 +28,15 @@ const createTableIfNotExists = async () => {
     }
 };
 
-const createUser = async (userData) => {
+const createUser = async (usersData) => {
     const sql = postgres(process.env.DATABASE_URL);
     let result;
     try {
-        result = await sql`
-        INSERT INTO public.users (name, age, address, additional_info)
-        VALUES (${userData.name}, ${userData.age}, ${userData.address}, ${userData.additional_info})
-        RETURNING id, name, age, address, additional_info;`;
-
-        console.log('User inserted:', result);
+        // result = await sql`
+        // INSERT INTO public.users (name, age, address, additional_info)
+        // VALUES (${userData.name}, ${userData.age}, ${userData.address}, ${userData.additional_info})
+        // RETURNING id, name, age, address, additional_info;`;
+        result = await sql`INSERT INTO public.users ${sql(usersData, 'name', 'age', 'address', 'additional_info')}`
     } catch (error) {
         console.error('Error creating table:', error.message);
     } finally {
@@ -98,9 +97,6 @@ const fetchUsersInRange = async (ageRange, isEfficient) => {
     } finally {
         await sql.end(); // Close the database connection
     }
-    console.log(result);
-
     return result;
-
 }
 module.exports = { requestHandler, createTableIfNotExists, createUser, fetchAllUsers, fetchUserCount, fetchUsersInRange }
