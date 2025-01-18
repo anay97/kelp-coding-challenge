@@ -78,14 +78,42 @@ kelp-coding-challenge/
 └── README.md              # Project documentation
 ```
 
+The structure allows maintaining much needed separation between different components of the project. This also ensures the [Single Responsibility Principle](https://en.wikipedia.org/wiki/Single-responsibility_principle) is not violated.
+
+As the project expands and becomes more complex, the structure will prove to be more useful. This also enables new team members to onboard quickly as the project structure is more nuanced and logically separated.
+
+While creating this structure is relatively easy, the challenge is, in my opinion, following it. Especially during deadlines, important deliveries, client escalations, etc.
+
 ## Example Usage
 ### Fetching Users by Age Range
 You can fetch users by providing age range criteria such as `lessThan`, `greaterThan`, or `equalTo`.
 
 If the equal to field is selected, the other two fields are ignored by the code.
 
-### CSV to JSON Conversion
-The application processes CSV file to convert them into JSON format for further operations.
+#### Fetch vs Efficient Fetch
+You can fetch users by providing age range criteria such as `lessThan`, `greaterThan`, or `equalTo`.
+
+If you use the `Fetch` button, the database is queried and all the fields are returned along with showing the name and age in a tabular format. On the other hand, while using the `Efficient Fetch` button, only the count of the users for the given age range are returned. This is far more efficient and is useful when querying tables with large number of rows.
+
+## Further Enhancements
+### Using a Frontend framework
+Using Angular or React.js was outside the scope for the project. Hence, something barebones yet powerful like the EJS Template Engine was used. Future use could look at using Angular or React.
+
+### Database Connections
+I decided to use [Neon](https://neon.tech) for providing a managed PostgreSQL database in the cloud. This allows for quick prototyping and also for showcasing (interviewers don't need to setup anything on their local systems). Needless to say, this couples the application to a given company's offering.
+
+This has been partially mitigated by using **postgres** dependency which is a generic PostgreSQL client instead of **@neon/serverless** dependency which couples the application to the PaaS provider. 
+
+Future efforts could be oriented towards containerizing the PostgreSQL database using Docker. Apart from the usual benefits of containerization, this allows for added security, flexibility and helps the application become platform independant. Furthermore, the entire application can also be a separate container!
+
+### Test-Driven Development
+The application was built in a day. In a production project, one would be better off with following Test-Driven Development and writing meaningful test cases to complement their code.
+
+### Gitflow
+Since I was the only one working on this project, I decided not to use multiple branches and merging to the main branch. A large team can benefit from something like that in place.
+
+### CI/CD Pipelines
+Again, being able to ensure the application works before merging to main would be a great added benefit.
 
 ## Contributing
 Feel free to fork the repository and submit pull requests.
