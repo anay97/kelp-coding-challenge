@@ -39,6 +39,7 @@ This is a Node.js project created as part of a coding challenge. It is built usi
    ```
 
 4. **Run the application:**
+   - Add the .env file given in email
    - For production:
      ```bash
      npm start
@@ -47,6 +48,8 @@ This is a Node.js project created as part of a coding challenge. It is built usi
      ```bash
      npm run dev
      ```
+   - Go to localhost:3000 and click on "Report"
+   - The report is generated in the console. You can also enter custom age ranges and click the Fetch Button
 
 ## Dependencies
 
@@ -73,7 +76,7 @@ kelp-coding-challenge/
 ├── services/              # Business logic and database operations
 ├── views/                 # EJS templates
 ├── public/                # Static files (CSS, JS, etc.)
-├── .env                   # Environment variables (not included in version control)
+├── .env                   # Environment variables (DB path version not included in version control. Sent separately)
 ├── package.json           # Project metadata and dependencies
 └── README.md              # Project documentation
 ```
