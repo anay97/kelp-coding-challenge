@@ -29,7 +29,7 @@
                         $('#user-table-body').html(htmlString);
                         $('#loading').css('display', 'none');
                         $("#user-data").css('display', 'block');
-                        var totalCount = response.totalCount[0]['count'];
+                        var totalCount = parseInt(response.totalCount);
                         $('#user-count').html('Query Count: ' + result.length + '<br>Total Count: ' + totalCount + '<br>% Distribution: ' + (100 * result.length) / totalCount + '%');
                     });
             })
@@ -45,8 +45,10 @@
                 $.post("/api/report", data,
                     function (response, status) {
                         var htmlString = '';
+                        console.log(response);
+
                         result = response.data[0]['count'];
-                        var totalCount = response.totalCount[0]['count'];
+                        var totalCount = parseInt(response.totalCount);
                         $('#loading').css('display', 'none');
                         $('#user-count').html('Query Count: ' + result + '<br>Total Count: ' + totalCount + '<br>% Distribution: ' + (100 * result) / totalCount + '%');
                     });
@@ -66,6 +68,9 @@
     </header>
     <div class="container">
         <h1>Report</h1><br>
+        <p>Standard report is generated in the console.
+            <br>Feel free to use this interface to see more distributions:
+        </p>
         Show records with ages:<br><br>
         <label for="lessThanFormControlInput" class="form-label">Less Than:</label>
         <input type="number" class="form-control" id="lessThanFormControlInput" placeholder="Ignored if left empty">

@@ -1,3 +1,13 @@
+/**
+ * This file can also contain models that define what UserData object
+ * contains based on data types of its key-value pairs
+ */
+
+/**
+ * Converts JSON Data to UserData object for storing in DB
+ * @param {*} jsonData 
+ * @returns UserData object
+ */
 const convertJSONToUserDataObject = (jsonData) => {
     const userData = {}
     userData['name'] = jsonData['name']['firstName'] + ' ' + jsonData['name']['lastName'];

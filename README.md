@@ -115,6 +115,9 @@ Since I was the only one working on this project, I decided not to use multiple 
 ### CI/CD Pipelines
 Again, being able to ensure the application works before merging to main would be a great added benefit.
 
+### Using TypeScript
+Since I wanted to keep it a standard express.js application, I refrained from using things like TypeScript that would add type safety and also help with code suggestions (intellisense). This would further make creating Data Types easier.
+
 ## Contributing
 Feel free to fork the repository and submit pull requests.
 

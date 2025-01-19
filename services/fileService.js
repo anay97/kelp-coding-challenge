@@ -1,5 +1,6 @@
 require('dotenv').config();
 const fs = require('fs');
+
 /**
  * Reads the path to the CSV file stored in .env
  * @returns String
@@ -27,7 +28,6 @@ const convertCSVToJSON = async () => {
             const obj = {};
             headers.forEach((header, index) => {
                 const keys = header.split('.');
-
                 let current = obj;
                 keys.forEach((key, keyIndex) => {
                     if (keyIndex === keys.length - 1) {
@@ -40,10 +40,8 @@ const convertCSVToJSON = async () => {
                     }
                 });
             });
-
             return obj;
         });
-
         return data;
     } catch (error) {
         throw new Error('Error reading or parsing the CSV file: ' + error.message);

@@ -10,7 +10,7 @@ const processCSVRoute = async (req, res) => {
             userData.push(convertJSONToUserDataObject(user));
         });
         await createUser(userData);
-        res.status(200).json({ success: true });
+        res.redirect('/report')
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: 'Error processing file' });
@@ -18,6 +18,46 @@ const processCSVRoute = async (req, res) => {
 }
 
 const reportPageRoute = async (req, res) => {
+    const totalCount = await fetchUserCount();
+
+    // Fetching count of users for each age range
+    let ageRange = {};
+    ageRange['lessThan'] = 20;
+    const result = [];
+    let userDetails = await fetchUsersInRange(ageRange, true);
+    let distr = 100 * userDetails[0].count / totalCount;
+    result.push({
+        "Age Group": "< 20",
+        "% Distribution": distr
+    })
+    ageRange['lessThan'] = 41;
+    ageRange['greaterThan'] = 19;
+    userDetails = await fetchUsersInRange(ageRange, true);
+    distr = 100 * userDetails[0].count / totalCount;
+    result.push({
+        "Age Group": "20 to 40",
+        "% Distribution": distr
+    })
+    ageRange['lessThan'] = 61;
+    ageRange['greaterThan'] = 39;
+    userDetails = await fetchUsersInRange(ageRange, true);
+    distr = 100 * userDetails[0].count / totalCount;
+    result.push({
+        "Age Group": "40 to 60",
+        "% Distribution": distr
+    })
+
+    delete ageRange['lessThan'];
+    ageRange['greaterThan'] = 60;
+    userDetails = await fetchUsersInRange(ageRange, true);
+    distr = 100 * userDetails[0].count / totalCount;
+    result.push({
+        "Age Group": ">60",
+        "% Distribution": distr
+    })
+    // Display using console.table
+    console.table(result);
+    // Render the page for further calculations
     res.render('report');
 }
 

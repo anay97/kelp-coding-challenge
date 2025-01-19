@@ -1,6 +1,9 @@
 const postgres = require('postgres');
 
-
+/**
+ * Method to check if DB is connecting
+ * @returns String DB Version
+ */
 const requestHandler = async () => {
     const sql = postgres(process.env.DATABASE_URL);
     const result = await sql`SELECT version()`;
@@ -8,6 +11,9 @@ const requestHandler = async () => {
     return version;
 };
 
+/**
+ * Method to create a table if it doesn't exist
+ */
 const createTableIfNotExists = async () => {
     const sql = postgres(process.env.DATABASE_URL);
     try {
@@ -28,23 +34,25 @@ const createTableIfNotExists = async () => {
     }
 };
 
+/**
+ * Create multiple users based on UsersData Array
+ * @param {Array<UserData>} usersData 
+ */
 const createUser = async (usersData) => {
     const sql = postgres(process.env.DATABASE_URL);
-    let result;
     try {
-        // result = await sql`
-        // INSERT INTO public.users (name, age, address, additional_info)
-        // VALUES (${userData.name}, ${userData.age}, ${userData.address}, ${userData.additional_info})
-        // RETURNING id, name, age, address, additional_info;`;
-        result = await sql`INSERT INTO public.users ${sql(usersData, 'name', 'age', 'address', 'additional_info')}`
+        await sql`INSERT INTO public.users ${sql(usersData, 'name', 'age', 'address', 'additional_info')}`
     } catch (error) {
         console.error('Error creating table:', error.message);
     } finally {
         await sql.end(); // Close the database connection
     }
-    return result;
 }
 
+/**
+ * Fetches all users in the database
+ * @returns {Array<UserData>}
+ */
 const fetchAllUsers = async () => {
     const sql = postgres(process.env.DATABASE_URL);
     let result;
@@ -58,6 +66,10 @@ const fetchAllUsers = async () => {
     return result;
 }
 
+/**
+ * Fetches count of users in the database
+ * @returns Count of Users
+ */
 const fetchUserCount = async () => {
     const sql = postgres(process.env.DATABASE_URL);
     let result;
@@ -68,9 +80,15 @@ const fetchUserCount = async () => {
     } finally {
         await sql.end(); // Close the database connection
     }
-    return result;
+    return result[0].count;
 }
 
+/**
+ * 
+ * @param {*} ageRange 
+ * @param {boolean} isEfficient 
+ * @returns {*} List of Users or Count of Users in Range
+ */
 const fetchUsersInRange = async (ageRange, isEfficient) => {
     if (!ageRange['lessThan']) {
         ageRange['lessThan'] = 1000;
@@ -78,7 +96,6 @@ const fetchUsersInRange = async (ageRange, isEfficient) => {
     if (!ageRange['greaterThan']) {
         ageRange['greaterThan'] = -1000;
     }
-
     const sql = postgres(process.env.DATABASE_URL);
     let result;
     const olderThan = x => sql` and age > ${x}`
