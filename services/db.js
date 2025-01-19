@@ -39,6 +39,7 @@ const createTableIfNotExists = async () => {
  * @param {Array<UserData>} usersData 
  */
 const createUser = async (usersData) => {
+    await createTableIfNotExists();
     const sql = postgres(process.env.DATABASE_URL);
     try {
         await sql`INSERT INTO public.users ${sql(usersData, 'name', 'age', 'address', 'additional_info')}`
